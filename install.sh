@@ -22,7 +22,11 @@ EOF
 apt update
 apt install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk '{print $3}') kubelet kubeadm kubectl
 
-kubeadm init
+kubeadm init --config /vagrant/kubeadm.yaml
+
+cp /vagrant/kubelet.conf /etc/systemd/system/kubelet.service.d/20-override.conf
+systemctl daemon-reload
+systemctl restart kubelet
 
 VAGRANT_HOME=/home/vagrant
 mkdir -p $VAGRANT_HOME/.kube
